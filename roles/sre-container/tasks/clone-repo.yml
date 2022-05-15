@@ -1,0 +1,52 @@
+---
+- name: "Make workdir {{ work_dir }}"
+  file:
+    path: "{{ work_dir }}"
+    state: directory
+    owner: ansible
+    mode: u=rwx,g=rx,o=rx
+  become: true
+  tags: 
+    - sre-container
+
+- name: "Clone APP git repo"
+  git: 
+    repo: "{{ git_repo }}"
+    dest: "{{ work_dir }}"
+    clone: yes
+    update: yes
+    force: yes 
+  become: false
+  tags: 
+    - sre-container
+
+# Dance with change ansible_python_interpreter because of policycoreutils-python
+
+- name: "Set up ansible_python_interpreter to Python2"
+  set_fact:
+    ansible_python_interpreter: "{{ ansible_facts.discovered_interpreter_python }}"
+  tags: 
+    - sre-container
+
+- name: "Fix context of files in '{{ work_dir }}'/web"
+  community.general.sefcontext:
+    target: "{{ work_dir }}/web(/.*)?"
+    setype: httpd_sys_content_t
+    state: present
+  become: true
+  tags: 
+    - sre-container
+
+- name: "Apply new SELinux file context to filesystem"
+  ansible.builtin.command: restorecon -irv "{{ work_dir }}/web"
+  become: true
+  tags: 
+    - sre-container
+
+- name: "Set up ansible_python_interpreter to Python3"
+  set_fact:
+    ansible_python_interpreter: /usr/bin/python3
+  tags: 
+    - sre-container
+
+...

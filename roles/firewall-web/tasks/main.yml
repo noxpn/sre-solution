@@ -1,0 +1,22 @@
+---
+- name: "Set up ansible_python_interpreter to Python2"
+  set_fact:
+    ansible_python_interpreter: "{{ ansible_facts.discovered_interpreter_python }}"
+  
+- name: "Fix firewall HTTP(80)"
+  ansible.posix.firewalld:
+    zone: public
+    service: http
+    permanent: yes
+    immediate: yes
+    state: enabled
+
+- name: "Fix firewall HTTPS(443)"
+  ansible.posix.firewalld:
+    zone: public
+    service: https
+    permanent: yes
+    immediate: yes
+    state: enabled
+
+...

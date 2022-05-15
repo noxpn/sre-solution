@@ -1,0 +1,65 @@
+---
+- name: "Gather new facts"
+  ansible.builtin.gather_facts:
+    parallel: false
+
+- name: "Set up ansible_python_interpreter"
+  set_fact:
+    ansible_python_interpreter: /usr/bin/python3
+
+- name: "Tune postgresql"
+  become: True
+  become_user: postgres
+
+  block: 
+    # - name: "Show shared_buffers1"
+    #   ansible.builtin.debug:
+    #     msg: "{{ shared_buffers }}"     
+
+    - name: "Calc Shared buffers"
+      set_fact:
+        shared_buffers: "{{ (ansible_memory_mb.real.total / 3) | int}}"
+
+    # - name: "Show shared_buffers2"
+    #   ansible.builtin.debug:
+    #     msg: "{{ shared_buffers }}"      
+
+    - name: "PGSQL CFG: shared_buffers 1/3 of mem.tottal"
+      ansible.builtin.lineinfile:
+        path: "{{ pg_cfg_path }}"
+        regexp: '^shared_buffers'
+        insertafter: '^shared_buffers = '
+        line: "shared_buffers = {{ shared_buffers }}MB"
+      notify: restart postgresql
+
+    - name: "PGSQL CFG: temp_buffers"
+      ansible.builtin.lineinfile:
+        path: "{{ pg_cfg_path }}"
+        regexp: '^#temp_buffers ='
+        insertafter: '^#temp_buffers = '
+        line: "temp_buffers = {{ temp_buffers }}"
+      notify: restart postgresql
+
+    - name: "PGSQL CFG: work_mem"
+      ansible.builtin.lineinfile:
+        path: "{{ pg_cfg_path }}"
+        regexp: '^#work_mem ='
+        insertafter: '^#work_mem = '
+        line: "work_mem = {{ work_mem }}"
+      notify: restart postgresql
+
+    - name: "PGSQL CFG: maintenance_work_mem"
+      ansible.builtin.lineinfile:
+        path: "{{ pg_cfg_path }}"
+        regexp: '^#maintenance_work_mem ='
+        insertafter: '^#maintenance_work_mem = '
+        line: "maintenance_work_mem = {{ maintenance_work_mem }}"
+      notify: restart postgresql
+
+    - name: "PGSQL CFG: max_connections"
+      ansible.builtin.lineinfile:
+        path: "{{ pg_cfg_path }}"
+        regexp: '^max_connections ='
+        insertafter: '^max_connections = '
+        line: "max_connections = {{ max_connections }}"
+      notify: restart postgresql

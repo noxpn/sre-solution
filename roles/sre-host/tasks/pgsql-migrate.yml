@@ -1,0 +1,32 @@
+---
+- name: Force all notified handlers to run at this point, not waiting for normal sync points
+  meta: flush_handlers
+
+- name: QUERY 1 BLOCK
+  block:
+    - name: QUERY 1
+      postgresql_query:
+        db: "{{ db_name }}"
+        login_user: "{{ db_user }}"
+        login_password: "{{ db_pass }}"
+        query: "{{ query_tb_create }}"
+      register: query_result
+  rescue:
+    - name: Errors
+      ansible.builtin.debug:
+        msg: "{{ query_result }}"
+
+- name: QUERY 2 BLOCK
+  block:
+    - name: QUERY 2
+      postgresql_query:
+        db: "{{ db_name }}"
+        login_user: "{{ db_user }}"
+        login_password: "{{ db_pass }}"
+        query: "{{ query_tb_fill }}"
+      register: query_result
+  rescue:
+    - name: Error
+      ansible.builtin.debug:
+        msg: "{{ query_result }}"
+...

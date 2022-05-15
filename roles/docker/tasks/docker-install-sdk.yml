@@ -1,0 +1,16 @@
+---
+- name: "Set up ansible_python_interpreter"
+  set_fact:
+    ansible_python_interpreter: /usr/bin/python3
+    
+- name: "Install Docker SDK Module for Python"
+  pip:
+    name: docker
+
+- name: "Start docker"
+  ansible.builtin.systemd:
+    daemon_reload: yes
+    state: started
+    enabled: yes
+    name: docker
+...

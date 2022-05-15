@@ -1,0 +1,17 @@
+---
+- name: "Fix sysctl HugePages"
+  become: True
+  become_user: root
+
+  block: 
+    - name: "Calc huge pages based on pgsql shared_buffers"
+      set_fact:
+        hpages: "{{ ((( shared_buffers | int) / 2 ) + (( shared_buffers | int ) / 100 )) | int }}"
+
+    - name: "Sysctl change hpages"
+      ansible.posix.sysctl:
+        name: vm.nr_hugepages
+        value: "{{ hpages }}"
+        state: present
+        sysctl_set: yes
+        reload: yes

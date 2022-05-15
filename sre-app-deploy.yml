@@ -1,0 +1,6 @@
+---
+- hosts: cos01
+  remote_user: ansible
+  roles:
+    - name: sre-container
+...

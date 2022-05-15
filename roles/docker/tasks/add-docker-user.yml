@@ -1,0 +1,14 @@
+---
+- name: "Add ansible user to docker group"
+  ansible.builtin.user:
+    name: "{{ ansible_facts.env.USER }}"
+    uid: "{{ ansible_facts.effective_user_id }}"
+    groups: 
+      - docker
+    append: yes
+  tags:
+    - fix_docker_user_grp
+
+- name: reset ssh connection to allow user changes to affect 'current login user'
+  meta: reset_connection
+...

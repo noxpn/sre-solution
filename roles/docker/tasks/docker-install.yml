@@ -1,0 +1,17 @@
+---
+- name: "Add Docker repo"
+  shell: yum-config-manager --add-repo="{{ docker_repo }}"
+  args:
+    creates: /etc/yum.repos.d/centos_o.repo 
+
+- name: "Install docker"
+  yum:
+    name: "{{ items }}"
+    state: present
+  vars:
+    items:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+
+...

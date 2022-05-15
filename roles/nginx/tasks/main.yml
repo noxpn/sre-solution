@@ -1,0 +1,13 @@
+---
+- name: "Install nginx"
+  yum:
+    name: nginx
+    state: present
+
+- name: "Start service httpd"
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: yes
+
+...

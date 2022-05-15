@@ -1,0 +1,8 @@
+---
+- import_tasks: nginx-crt.yml
+- import_tasks: nginx-config.yml
+- import_tasks: pgsql-config.yml
+- import_tasks: pgsql-migrate.yml
+- import_tasks: pgsql-tune.yml
+- import_tasks: os-hpages.yml
+...

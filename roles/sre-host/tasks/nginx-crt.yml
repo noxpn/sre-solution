@@ -1,0 +1,33 @@
+---
+- name: "Copy NGINX Certificates"
+  become: True
+  become_user: root
+
+  block: 
+    - name: "Create a NGINX CRT directory"
+      ansible.builtin.file:
+        path: "{{ nginx_crt }}"
+        state: directory
+        mode: '0755'
+
+#vault crypt does not make sense in this particular role
+#because the certificate is host dependent
+#not testable in review
+
+    - name: "Copy NGINX crt"
+      copy:
+        src: "{{ crt_vault }}{{ https_server_name }}.{{ ssl_crt }}"
+        dest: "{{ nginx_crt }}{{ https_server_name }}.{{ ssl_crt }}"
+        #decrypt: yes
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: "Copy NGINX key"
+      copy:
+        src: "{{ crt_vault }}{{ https_server_name }}.{{ ssl_key }}"
+        dest: "{{ nginx_crt }}{{ https_server_name }}.{{ ssl_key }}"
+        #decrypt: yes
+        owner: root
+        group: root
+        mode: '0600'

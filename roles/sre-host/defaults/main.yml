@@ -1,0 +1,20 @@
+---
+query_tb_create: "CREATE TABLE author (id SERIAL, name VARCHAR(100));"
+query_tb_fill: "INSERT INTO author (name) VALUES ('John'), ('Alex');"
+https_server_name: "cos01.noxp.ru"
+ssl_crt_path: "/etc/nginx/crt/"
+ssl_key_path: "/etc/nginx/crt/"
+ssl_crt: "fullchain.pem"
+ssl_key: "privkey.pem"
+crt_vault: "/home/noxp/ansible/vault/crt/"
+nginx_crt: "/etc/nginx/crt/"
+
+#pgsql 
+pg_cfg_path: "~/data/postgresql.conf"
+work_mem: "8MB"
+temp_buffers: "16MB"
+maintenance_work_mem: "32MB"
+max_connections: "99"
+shared_buffers: "128"
+
+...

@@ -1,0 +1,7 @@
+---
+- import_tasks: docker-install.yml 
+- import_tasks: docker-install-sdk.yml
+- import_tasks: add-docker-user.yml 
+- import_tasks: docker-test.yml 
+
+...

@@ -1,0 +1,54 @@
+---
+- name: "Gather new facts"
+  ansible.builtin.gather_facts:
+    parallel: false
+
+- name: "Set up ansible_python_interpreter"
+  set_fact:
+    ansible_python_interpreter: /usr/bin/python3
+
+- name: "Config pg database and user"
+  become: True
+  become_user: postgres
+
+  block: 
+    - name: "Create db user: [{{ db_user }}]"
+      postgresql_user:
+        state: present
+        name: "{{ db_user }}"
+        password: "{{ db_pass }}"
+
+    - name: "Create database: [{{ db_name }}]"
+      postgresql_db:
+        state: present
+        name: "{{ db_name }}"
+        owner: "{{ db_user }}"
+
+    - name: "Config pg listen address"
+      ansible.builtin.lineinfile:
+        path: "~/data/postgresql.conf"
+        regexp: '^listen_addresses '
+        insertafter: '^#listen_addresses '
+        line: "listen_addresses='127.0.0.1, {{ ansible_facts.docker0.ipv4.address }}'"
+
+    - name: "Add user [{{ db_user }}] local"
+      postgresql_pg_hba:
+        dest: "~/data/pg_hba.conf"
+        contype: local
+        databases: "{{ db_name }}"
+        method: md5
+        users: "{{ db_user }}"
+        create: true
+
+    - name: "Allow user [{{ db_user }}] network"
+      postgresql_pg_hba:
+        dest: "~/data/pg_hba.conf"
+        contype: host
+        databases: "{{ db_name }}"
+        method: md5
+        users: "{{ db_user }}"
+        address: "{{ (ansible_facts.docker0.ipv4.network +'/' + ansible_facts.docker0.ipv4.netmask) | ansible.netcommon.ipaddr('network/prefix') }}"
+        create: true
+      notify: restart postgresql
+     
+...

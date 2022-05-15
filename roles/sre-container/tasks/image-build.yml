@@ -1,0 +1,27 @@
+---
+# work_dir: "/var/www/sre"
+
+- name: "Copy image config"
+  copy:
+    src: "{{ item }}"
+    dest: "{{ work_dir }}/playground/"
+  loop:
+    - "files/php.ini"
+    - "files/Dockerfile"
+  tags: 
+    - sre-container
+    - sre-image-build
+
+
+- name: "build container image"
+  community.docker.docker_image:
+    name: php-fpm-img
+    build:
+      path: "{{ work_dir }}/playground/"
+    source: build
+    state: present
+  register: image_name
+  tags: 
+    - sre-container  
+    - sre-image-build
+...

@@ -1,0 +1,22 @@
+---
+- hosts: cos01
+  remote_user: ansible
+  roles:
+    - name: centos-updated
+      become: yes 
+    - name: python
+      become: yes 
+    - name: git-client
+      become: yes 
+    - name: docker
+      become: yes 
+    - name: pgsql
+      become: yes 
+    - name: nginx
+      become: yes 
+    - name: firewall-web
+      become: yes
+    - name: thp-disable
+    - name: sre-host
+    - name: sre-container
+...

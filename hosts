@@ -1,0 +1,6 @@
+---
+stage01:
+  hosts:
+    cos01:
+      ansible_host: 172.25.50.22
+...

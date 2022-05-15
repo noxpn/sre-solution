@@ -1,0 +1,14 @@
+server {
+    listen 443 ssl;
+    server_name {{ https_server_name }};
+    include app-defaults;
+
+    ssl_certificate         {{ ssl_crt_path }}{{ https_server_name }}.{{ ssl_crt }};
+    ssl_certificate_key     {{ ssl_key_path }}{{ https_server_name }}.{{ ssl_key }};
+ 
+    ssl_session_cache shared:SSL:5m;
+    ssl_session_timeout  10m;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+
+}
+

@@ -1,0 +1,26 @@
+---
+- name: restart docker
+  become: True
+  ansible.builtin.systemd:
+    daemon_reload: yes
+    state: restarted
+    enabled: yes
+    name: docker
+
+- name: restart postgresql
+  become: True
+  ansible.builtin.systemd:
+    daemon_reload: yes
+    state: restarted
+    enabled: yes
+    name: postgresql
+
+- name: restart nginx
+  become: True
+  ansible.builtin.systemd:
+    daemon_reload: yes
+    state: restarted
+    enabled: yes
+    name: nginx
+
+...

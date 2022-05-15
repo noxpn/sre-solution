@@ -1,0 +1,8 @@
+---
+docker_repo: "https://download.docker.com/linux/centos/docker-ce.repo"
+docker_service_path: "/etc/systemd/system/docker.service.d"
+#test docker after install
+test_docker: True
+default_container_image: hello-world
+
+...

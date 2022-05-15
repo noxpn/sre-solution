@@ -1,0 +1,17 @@
+---
+- name: "Show DEBUG info"
+  ansible.builtin.debug:
+    var: ansible_facts
+  tags: 
+    - debug-info
+
+# - name: "Show DEBUG1 info: discovered_interpreter_python"
+#   ansible.builtin.debug:
+#     var: ansible_facts.discovered_interpreter_python
+
+# - name: "Show DEBUG1 info: ansible_python_interpreter"
+#   ansible.builtin.debug:
+#     var: ansible_python_interpreter
+
+
+...

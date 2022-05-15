@@ -1,0 +1,6 @@
+---
+git_repo: "https://github.com/muxx/sre-hello-world.git"
+work_dir: "/var/www/sre"
+dockerfile: "/docker/images/php"
+
+...

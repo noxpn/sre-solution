@@ -1,0 +1,21 @@
+---
+- name: "Disable THP"
+  become: True
+  become_user: root
+
+  block: 
+    - name: "Copy THP-disable.service file"
+      copy:
+        src: "files/disable-thp.service"
+        dest: "/etc/systemd/system/disable-thp.service"
+
+    - name: "Reload systemctl daemon"
+      ansible.builtin.systemd:
+        daemon_reload: yes
+
+    - name: "Enable and start THP-disable.service"
+      ansible.builtin.systemd:
+        name: disable-thp
+        enabled: yes
+        state: started
+        masked: no
